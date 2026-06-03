@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fuel-logistics-infrastructure
+  namespace: argocd # Το ArgoCD ζει εδώ, οπότε του στέλνουμε την εντολή εκεί
+spec:
+  project: default
+  source:
+    
+    repoURL: 'https://github.com/Efi-koump/fuel-logistics-cloud.git'
+    targetRevision: HEAD
+    path: kubernetes # Ο φάκελος μέσα στο Git που κρύβει τα yaml
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: default # Εδώ θα εγκατασταθούν οι εφαρμογές (RabbitMQ, MinIO, κλπ)
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

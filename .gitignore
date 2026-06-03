@@ -1,0 +1,28 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Node-RED runtime data
+node-red/data/.npm/
+node-red/data/node_modules/
+node-red/data/*.backup
+node-red/data/.config.*.backup
+
+# Docker runtime data
+rabbitmq/data/
+thingsboard/mytb-data/
+thingsboard/mytb-logs/
+MinIO/data/
+
+# Executables
+*.exe
+
+# Logs
+*.log
+
+# Env files
+.env
+
+# Generated alarm / telemetry files
+node-red/data/alarm_*.json
+node-red/data/telemetry_*.json

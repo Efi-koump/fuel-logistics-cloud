@@ -1,0 +1,2215 @@
+[
+    {
+        "id": "47fe868a5803bd13",
+        "type": "tab",
+        "label": "Gas station 01",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "cddd34b04f4433b5",
+        "type": "tab",
+        "label": "Gas station 02",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "f025f2765731999e",
+        "type": "tab",
+        "label": "Gas station 03",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "a93feb3184e48222",
+        "type": "tab",
+        "label": "RabbitMQ",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "e36f7e391bd052ca",
+        "type": "tab",
+        "label": "MinIO",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "caf99fe610a2637a",
+        "type": "amqp-broker",
+        "name": "",
+        "host": "rabbitmq",
+        "port": 5672,
+        "vhost": "/",
+        "tls": false,
+        "credsFromSettings": false
+    },
+    {
+        "id": "0befeb8e3f295652",
+        "type": "minio-config",
+        "name": "MinIO Instance",
+        "host": "minio",
+        "port": "9000",
+        "useSsl": false
+    },
+    {
+        "id": "85c13dae19a089de",
+        "type": "minio-config",
+        "name": "MinIO Instance",
+        "host": "minio",
+        "port": "9000",
+        "useSsl": false
+    },
+    {
+        "id": "7b62560991a989fc",
+        "type": "inject",
+        "z": "47fe868a5803bd13",
+        "name": "diesel truck 01",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 200,
+        "wires": [
+            [
+                "164bfb3fa2d253a1"
+            ]
+        ]
+    },
+    {
+        "id": "164bfb3fa2d253a1",
+        "type": "function",
+        "z": "47fe868a5803bd13",
+        "name": "function 1",
+        "func": "msg.payload = {\n  fuel_level_percentage: 18,\n  diesel_temperature_c: 42,\n  tank_status: \"LEAK\",\n  //gps_lat: 37.962179,\n  //gps_lon: 23.700790\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 200,
+        "wires": [
+            [
+                "d5d4701f65695bc2"
+            ]
+        ]
+    },
+    {
+        "id": "d5d4701f65695bc2",
+        "type": "http request",
+        "z": "47fe868a5803bd13",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://mytb:9090/api/v1/3tWifHQUzJYjr11gtzOs/telemetry",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "Content-Type",
+                "keyValue": "",
+                "valueType": "application/json",
+                "valueValue": ""
+            }
+        ],
+        "x": 510,
+        "y": 200,
+        "wires": [
+            [
+                "e70ca1efc62a5198"
+            ]
+        ]
+    },
+    {
+        "id": "e70ca1efc62a5198",
+        "type": "debug",
+        "z": "47fe868a5803bd13",
+        "name": "diesel truck 01",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 760,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "ed0d23b0b7ba740d",
+        "type": "comment",
+        "z": "47fe868a5803bd13",
+        "name": "GAS STATION 01",
+        "info": "",
+        "x": 410,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "5618388ca95a5eb0",
+        "type": "inject",
+        "z": "47fe868a5803bd13",
+        "name": "gas truck 01",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 280,
+        "wires": [
+            [
+                "9b22a301d2b159f0"
+            ]
+        ]
+    },
+    {
+        "id": "9b22a301d2b159f0",
+        "type": "function",
+        "z": "47fe868a5803bd13",
+        "name": "function 4",
+        "func": "msg.payload = {\n    fuel_level_percentage: 25,\n    gas_temperature_c: 35,\n    tank_status: \"NORMAL\",\n    gps_lat: 37.962179,\n    gps_lon: 23.700790\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 280,
+        "wires": [
+            [
+                "af56583924792668"
+            ]
+        ]
+    },
+    {
+        "id": "af56583924792668",
+        "type": "http request",
+        "z": "47fe868a5803bd13",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://mytb:9090/api/v1a/owhsfl9t1l7ohumzvffm/telemetry",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 510,
+        "y": 280,
+        "wires": [
+            [
+                "ed002d39db44c651"
+            ]
+        ]
+    },
+    {
+        "id": "ed002d39db44c651",
+        "type": "debug",
+        "z": "47fe868a5803bd13",
+        "name": "gas truck 01",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 750,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "4fbdbacbcde45ad1",
+        "type": "inject",
+        "z": "47fe868a5803bd13",
+        "name": "diesel tank 01",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 400,
+        "wires": [
+            [
+                "deee15178ef9b167"
+            ]
+        ]
+    },
+    {
+        "id": "deee15178ef9b167",
+        "type": "function",
+        "z": "47fe868a5803bd13",
+        "name": "function 7",
+        "func": "msg.payload = {\n    fuel_level_percentage: 25,\n    diesel_temperature_c: 45,\n    tank_status: \"NORMAL\",\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 400,
+        "wires": [
+            [
+                "2c3de9f7c95f19b1"
+            ]
+        ]
+    },
+    {
+        "id": "2c3de9f7c95f19b1",
+        "type": "http request",
+        "z": "47fe868a5803bd13",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://mytb:9090/api/v1/UhjqA4qkt9EiBmErkIY6/telemetry",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 510,
+        "y": 400,
+        "wires": [
+            [
+                "51300977e2a80bcf"
+            ]
+        ]
+    },
+    {
+        "id": "51300977e2a80bcf",
+        "type": "debug",
+        "z": "47fe868a5803bd13",
+        "name": "diesel tank 01",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 760,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "1d425c8547edaa0b",
+        "type": "inject",
+        "z": "47fe868a5803bd13",
+        "name": "gas tank 01",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 480,
+        "wires": [
+            [
+                "c63e15468a5a4adf"
+            ]
+        ]
+    },
+    {
+        "id": "c63e15468a5a4adf",
+        "type": "function",
+        "z": "47fe868a5803bd13",
+        "name": "function 8",
+        "func": "msg.payload = {\n    fuel_level_percentage: 25,\n    gas_temperature_c: 45,\n    tank_status: \"NORMAL\",\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 480,
+        "wires": [
+            [
+                "b4964ca33b4282f3"
+            ]
+        ]
+    },
+    {
+        "id": "b4964ca33b4282f3",
+        "type": "http request",
+        "z": "47fe868a5803bd13",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://mytb:9090/api/v1/PJJjZFZ2QgAyacJ7maFY/telemetry",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 510,
+        "y": 480,
+        "wires": [
+            [
+                "58b9ce4a3883a719"
+            ]
+        ]
+    },
+    {
+        "id": "58b9ce4a3883a719",
+        "type": "debug",
+        "z": "47fe868a5803bd13",
+        "name": "gas tank 01",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 750,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "ef0aa3fd324fd4b3",
+        "type": "inject",
+        "z": "47fe868a5803bd13",
+        "name": "warehouse 01",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 600,
+        "wires": [
+            [
+                "a5e373dc388852e9"
+            ]
+        ]
+    },
+    {
+        "id": "a5e373dc388852e9",
+        "type": "function",
+        "z": "47fe868a5803bd13",
+        "name": "function 9",
+        "func": "msg.payload = {\n    door: \"ON\",\n    temperature: 24,\n    humidity_percentage: 45\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 600,
+        "wires": [
+            [
+                "f5af0a8b489226a1"
+            ]
+        ]
+    },
+    {
+        "id": "f5af0a8b489226a1",
+        "type": "http request",
+        "z": "47fe868a5803bd13",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://mytb:9090/api/v1/c5uiuw2zmca8kecg0ypt/telemetry",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 510,
+        "y": 600,
+        "wires": [
+            [
+                "bde9c7977ff386b5"
+            ]
+        ]
+    },
+    {
+        "id": "bde9c7977ff386b5",
+        "type": "debug",
+        "z": "47fe868a5803bd13",
+        "name": "warehouse 01",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 760,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "196c8c0501f289aa",
+        "type": "inject",
+        "z": "47fe868a5803bd13",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 100,
+        "y": 740,
+        "wires": [
+            [
+                "7cddd9df6e86bd83"
+            ]
+        ]
+    },
+    {
+        "id": "7cddd9df6e86bd83",
+        "type": "function",
+        "z": "47fe868a5803bd13",
+        "name": "gps",
+        "func": "// Αφετηρία (π.χ. Αθήνα – Πειραιάς)\nlet lat = context.get(\"lat\") || 37.962179;\nlet lon = context.get(\"lon\") || 23.700790;\n\n// Μικρή μετακίνηση (ρεαλιστική)\nlat += (Math.random() - 0.5) * 0.0005;\nlon += (Math.random() - 0.5) * 0.0005;\n\n// Αποθήκευση για επόμενο tick\ncontext.set(\"lat\", lat);\ncontext.set(\"lon\", lon);\n\n// ThingsBoard telemetry\nmsg.payload = {\n    location: {\n        lat: lat,\n        lon: lon\n    },\n    speed_kmh: Math.floor(30 + Math.random() * 20)\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 740,
+        "wires": [
+            [
+                "3cce394e8cd00fc8"
+            ]
+        ]
+    },
+    {
+        "id": "3cce394e8cd00fc8",
+        "type": "http request",
+        "z": "47fe868a5803bd13",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://mytb:9090/api/v1/TYenCNNLMf0lZJKb1AfV/telemetry",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "Content-Type",
+                "keyValue": "",
+                "valueType": "application/json",
+                "valueValue": ""
+            }
+        ],
+        "x": 530,
+        "y": 740,
+        "wires": [
+            [
+                "80b4a4473e11e5f0"
+            ]
+        ]
+    },
+    {
+        "id": "80b4a4473e11e5f0",
+        "type": "debug",
+        "z": "47fe868a5803bd13",
+        "name": "diesel truck 01 gps",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 770,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "99df1a7051167976",
+        "type": "inject",
+        "z": "cddd34b04f4433b5",
+        "name": "diesel tanker 02",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 160,
+        "wires": [
+            [
+                "d3cb5fcde0439071"
+            ]
+        ]
+    },
+    {
+        "id": "d3cb5fcde0439071",
+        "type": "function",
+        "z": "cddd34b04f4433b5",
+        "name": "function 2",
+        "func": "msg.payload = {\n  fuel_level_percentage: 15,\n  diesel_temperature_c: 60,\n  tank_status: \"NORMAL\",\n  gps_lat: 37.962179,\n  gps_lon: 23.700790\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 160,
+        "wires": [
+            [
+                "7b1ef5908c8b2b2f"
+            ]
+        ]
+    },
+    {
+        "id": "7b1ef5908c8b2b2f",
+        "type": "http request",
+        "z": "cddd34b04f4433b5",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://mytb:9090/api/v1/vv7buuqt7ugxrct2w30o/telemetry",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 530,
+        "y": 160,
+        "wires": [
+            [
+                "fded7fdfd812551c"
+            ]
+        ]
+    },
+    {
+        "id": "fded7fdfd812551c",
+        "type": "debug",
+        "z": "cddd34b04f4433b5",
+        "name": "diesel truck 02",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 740,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "1740c6a0fff7a43e",
+        "type": "comment",
+        "z": "cddd34b04f4433b5",
+        "name": "GAS STATION 02",
+        "info": "",
+        "x": 410,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "e853655bdc3666fa",
+        "type": "inject",
+        "z": "cddd34b04f4433b5",
+        "name": "gas truck 02",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 240,
+        "wires": [
+            [
+                "2c78331aa7bfec37"
+            ]
+        ]
+    },
+    {
+        "id": "2c78331aa7bfec37",
+        "type": "function",
+        "z": "cddd34b04f4433b5",
+        "name": "function 5",
+        "func": "msg.payload = {\n    fuel_level_percentage: 15,\n    gas_temperature_c: 33,\n    tank_status: \"LEAK\",\n    gps_lat: 37.962179,\n    gps_lon: 23.700790\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 240,
+        "wires": [
+            [
+                "049a6c0f3d90b396"
+            ]
+        ]
+    },
+    {
+        "id": "049a6c0f3d90b396",
+        "type": "http request",
+        "z": "cddd34b04f4433b5",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://mytb:9090/api/v1/finbtms733z3h0788d3x/telemetry",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 530,
+        "y": 240,
+        "wires": [
+            [
+                "c7b9712655969626"
+            ]
+        ]
+    },
+    {
+        "id": "c7b9712655969626",
+        "type": "debug",
+        "z": "cddd34b04f4433b5",
+        "name": "gas truck 02",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 730,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "08749721f3c63abb",
+        "type": "inject",
+        "z": "cddd34b04f4433b5",
+        "name": "diesel tank 02",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 360,
+        "wires": [
+            [
+                "682e66763ec5c039"
+            ]
+        ]
+    },
+    {
+        "id": "682e66763ec5c039",
+        "type": "function",
+        "z": "cddd34b04f4433b5",
+        "name": "function 10",
+        "func": "msg.payload = {\n    fuel_level_percentage: 15,\n    diesel_temperature_c: 58,\n    tank_status: \"NORMAL\",\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 330,
+        "y": 360,
+        "wires": [
+            [
+                "b0644f088547d293"
+            ]
+        ]
+    },
+    {
+        "id": "b0644f088547d293",
+        "type": "http request",
+        "z": "cddd34b04f4433b5",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://mytb:9090/api/v1/5240671fcvl7ohgs1iq2/telemetry",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 530,
+        "y": 360,
+        "wires": [
+            [
+                "8c57d420dbe12fe4"
+            ]
+        ]
+    },
+    {
+        "id": "8c57d420dbe12fe4",
+        "type": "debug",
+        "z": "cddd34b04f4433b5",
+        "name": "diesel tank 02",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 740,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "61e51d527d2a6808",
+        "type": "inject",
+        "z": "cddd34b04f4433b5",
+        "name": "gas tank 02",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 440,
+        "wires": [
+            [
+                "018fb8e8593a3968"
+            ]
+        ]
+    },
+    {
+        "id": "018fb8e8593a3968",
+        "type": "function",
+        "z": "cddd34b04f4433b5",
+        "name": "function 11",
+        "func": "msg.payload = {\n    fuel_level_percentage: 25,\n    gas_temperature_c: 45,\n    tank_status: \"NORMAL\",\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 330,
+        "y": 440,
+        "wires": [
+            [
+                "28c88b51841dac0d"
+            ]
+        ]
+    },
+    {
+        "id": "28c88b51841dac0d",
+        "type": "http request",
+        "z": "cddd34b04f4433b5",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://mytb:9090/api/v1/i7ix6b8fjimm30a1b0v5/telemetry",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 530,
+        "y": 440,
+        "wires": [
+            [
+                "158a1ecba9ba3ed3"
+            ]
+        ]
+    },
+    {
+        "id": "158a1ecba9ba3ed3",
+        "type": "debug",
+        "z": "cddd34b04f4433b5",
+        "name": "gas tank 02",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 730,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "4da09b52a6c4ad1a",
+        "type": "inject",
+        "z": "cddd34b04f4433b5",
+        "name": "warehouse 02",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 560,
+        "wires": [
+            [
+                "18084dfe74cc9cb1"
+            ]
+        ]
+    },
+    {
+        "id": "18084dfe74cc9cb1",
+        "type": "function",
+        "z": "cddd34b04f4433b5",
+        "name": "function 12",
+        "func": "msg.payload = {\n    door: \"OFF\",\n    temperature: 25,\n    humidity_percentage: 45\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 330,
+        "y": 560,
+        "wires": [
+            [
+                "952c77eff3683675"
+            ]
+        ]
+    },
+    {
+        "id": "952c77eff3683675",
+        "type": "http request",
+        "z": "cddd34b04f4433b5",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://mytb:9090/api/v1/1k3l7089g84gbulcpgbk/telemetry",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 530,
+        "y": 560,
+        "wires": [
+            [
+                "4fdc84873669dd8c"
+            ]
+        ]
+    },
+    {
+        "id": "4fdc84873669dd8c",
+        "type": "debug",
+        "z": "cddd34b04f4433b5",
+        "name": "warehouse 02",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 740,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "114addf3304fb859",
+        "type": "inject",
+        "z": "f025f2765731999e",
+        "name": "diesel tanker 03",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 160,
+        "wires": [
+            [
+                "9369a8366e4dad8c"
+            ]
+        ]
+    },
+    {
+        "id": "9369a8366e4dad8c",
+        "type": "function",
+        "z": "f025f2765731999e",
+        "name": "function 3",
+        "func": "msg.payload = {\n  fuel_level_percentage: 28,\n  diesel_temperature_c: 55,\n  tank_status: \"LEAK\",\n  gps_lat: 37.962179,\n  gps_lon: 23.700790\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 160,
+        "wires": [
+            [
+                "b2ef78c4d861fd33"
+            ]
+        ]
+    },
+    {
+        "id": "b2ef78c4d861fd33",
+        "type": "http request",
+        "z": "f025f2765731999e",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://mytb:9090/api/v1/qg8vw47it568ktcrkh9w/telemetry",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 530,
+        "y": 160,
+        "wires": [
+            [
+                "9d8e4c8ec09c15a6"
+            ]
+        ]
+    },
+    {
+        "id": "9d8e4c8ec09c15a6",
+        "type": "debug",
+        "z": "f025f2765731999e",
+        "name": "diesel truck 03",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 740,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "c4d86a196445a034",
+        "type": "comment",
+        "z": "f025f2765731999e",
+        "name": "GAS STATION 03",
+        "info": "",
+        "x": 410,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "400114d8fcda1ea6",
+        "type": "inject",
+        "z": "f025f2765731999e",
+        "name": "gas truck 03",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 260,
+        "wires": [
+            [
+                "a2fdbc1405e7533e"
+            ]
+        ]
+    },
+    {
+        "id": "a2fdbc1405e7533e",
+        "type": "function",
+        "z": "f025f2765731999e",
+        "name": "function 6",
+        "func": "msg.payload = {\n    fuel_level_percentage: 15,\n    gas_temperature_c: 25,\n    tank_status: \"LEAK\",\n    gps_lat: 37.962179,\n    gps_lon: 23.700790\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 260,
+        "wires": [
+            [
+                "03f956673061a49f"
+            ]
+        ]
+    },
+    {
+        "id": "03f956673061a49f",
+        "type": "http request",
+        "z": "f025f2765731999e",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://mytb:9090/api/v1/h6zdiu6013wy1axf11b8/telemetry",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 530,
+        "y": 260,
+        "wires": [
+            [
+                "f7c2c10d99be9988"
+            ]
+        ]
+    },
+    {
+        "id": "f7c2c10d99be9988",
+        "type": "debug",
+        "z": "f025f2765731999e",
+        "name": "gas truck 03",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 730,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "011e70b9330a9c3f",
+        "type": "inject",
+        "z": "f025f2765731999e",
+        "name": "diesel tank 03",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 380,
+        "wires": [
+            [
+                "a6179d4b2538c570"
+            ]
+        ]
+    },
+    {
+        "id": "a6179d4b2538c570",
+        "type": "function",
+        "z": "f025f2765731999e",
+        "name": "function 13",
+        "func": "msg.payload = {\n    fuel_level_percentage: 25,\n    diesel_temperature_c: 45,\n    tank_status: \"NORMAL\",\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 380,
+        "wires": [
+            [
+                "47db3a77424f429d"
+            ]
+        ]
+    },
+    {
+        "id": "47db3a77424f429d",
+        "type": "http request",
+        "z": "f025f2765731999e",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://mytb:9090/api/v1/soq254924ulhxtj3o2bh/telemetry",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 510,
+        "y": 380,
+        "wires": [
+            [
+                "200d68aa181733ff"
+            ]
+        ]
+    },
+    {
+        "id": "200d68aa181733ff",
+        "type": "debug",
+        "z": "f025f2765731999e",
+        "name": "diesel tank 03",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 760,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "91b843176193e149",
+        "type": "inject",
+        "z": "f025f2765731999e",
+        "name": "gas tank 03",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 460,
+        "wires": [
+            [
+                "d8b72bee2460a966"
+            ]
+        ]
+    },
+    {
+        "id": "d8b72bee2460a966",
+        "type": "function",
+        "z": "f025f2765731999e",
+        "name": "function 14",
+        "func": "msg.payload = {\n    fuel_level_percentage: 25,\n    gas_temperature_c: 45,\n    tank_status: \"NORMAL\",\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 460,
+        "wires": [
+            [
+                "dc9c2d55ab3225be"
+            ]
+        ]
+    },
+    {
+        "id": "dc9c2d55ab3225be",
+        "type": "http request",
+        "z": "f025f2765731999e",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://mytb:9090/api/v1/55moel4of8up1vfekcoo/telemetry",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 510,
+        "y": 460,
+        "wires": [
+            [
+                "040821bb8e79dc31"
+            ]
+        ]
+    },
+    {
+        "id": "040821bb8e79dc31",
+        "type": "debug",
+        "z": "f025f2765731999e",
+        "name": "gas tank 03",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 750,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "ab8e589096cdb52f",
+        "type": "inject",
+        "z": "f025f2765731999e",
+        "name": "warehouse 03",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 580,
+        "wires": [
+            [
+                "21be090ba0818b32"
+            ]
+        ]
+    },
+    {
+        "id": "21be090ba0818b32",
+        "type": "function",
+        "z": "f025f2765731999e",
+        "name": "function 15",
+        "func": "msg.payload = {\n    door: \"ON\",\n    temperature: 33,\n    humidity_percentage: 45\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 580,
+        "wires": [
+            [
+                "dce0837ad30b4202"
+            ]
+        ]
+    },
+    {
+        "id": "dce0837ad30b4202",
+        "type": "http request",
+        "z": "f025f2765731999e",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://mytb:9090/api/v1/f0y9ya7gt4xskuoq2o2o/telemetry",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 510,
+        "y": 580,
+        "wires": [
+            [
+                "3aa425425b541f4e"
+            ]
+        ]
+    },
+    {
+        "id": "3aa425425b541f4e",
+        "type": "debug",
+        "z": "f025f2765731999e",
+        "name": "warehouse 03",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 760,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "415fe472f24cc575",
+        "type": "debug",
+        "z": "a93feb3184e48222",
+        "name": "rabbitmq",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 580,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "517eaf2689f161db",
+        "type": "amqp-in",
+        "z": "a93feb3184e48222",
+        "name": "",
+        "broker": "caf99fe610a2637a",
+        "prefetch": 0,
+        "noAck": true,
+        "exchangeName": "alarm.exchange",
+        "exchangeType": "topic",
+        "exchangeRoutingKey": "alarm.created",
+        "exchangeDurable": true,
+        "queueName": "alarm.events",
+        "queueExclusive": false,
+        "queueDurable": true,
+        "queueAutoDelete": false,
+        "headers": "{}",
+        "x": 190,
+        "y": 100,
+        "wires": [
+            [
+                "415fe472f24cc575",
+                "2975d82bb13e334c"
+            ]
+        ]
+    },
+    {
+        "id": "2975d82bb13e334c",
+        "type": "function",
+        "z": "a93feb3184e48222",
+        "name": "function 16",
+        "func": "const alarm = msg.payload;\n\nconst device = alarm.originatorName;\n\nlet customer;\n\nif (device.includes(\"01\")) {\n  customer = \"gas-station-01\";\n} else if (device.includes(\"02\")) {\n  customer = \"gas-station-02\";\n} else if (device.includes(\"03\")) {\n  customer = \"gas-station-03\";\n} else {\n  customer = \"unknown\";\n}\n\nmsg.customer = customer;\n\nconst deviceName = alarm.originatorName || \"unknown_device\";\n\n// timestamp\nconst now = new Date();\nconst ts = now.toISOString().replace(/[:.]/g, \"-\");\n\n// filename\nconst deviceClean = deviceName.replace(/\\s+/g, \"_\");\nconst filename = `alarm_${deviceClean}_${ts}.json`;\n\n// local path\nconst localPath = `/data/${filename}`;\n\n// content\nconst content = JSON.stringify(alarm, null, 2);\n\n// File node\nmsg.payload = content;\nmsg.filename = localPath;\n\n// MinIO\nmsg.filePath = localPath;\nmsg.objectName = filename;\n\n// metadata\nmsg.metadata = {\n  device: deviceName,\n  alarm_type: alarm.type,\n  severity: alarm.severity,\n  status: alarm.status,\n  createdTime: alarm.createdTime\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 220,
+        "wires": [
+            [
+                "daaa68a49072c822",
+                "a995c213cd411705"
+            ]
+        ]
+    },
+    {
+        "id": "1ccfec0c9eb5a163",
+        "type": "debug",
+        "z": "a93feb3184e48222",
+        "name": "msg 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1490,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "e71f0416f77a4b68",
+        "type": "debug",
+        "z": "a93feb3184e48222",
+        "name": "msg 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1490,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "daaa68a49072c822",
+        "type": "debug",
+        "z": "a93feb3184e48222",
+        "name": "function",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 660,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "230a5298ad824eba",
+        "type": "files",
+        "z": "a93feb3184e48222",
+        "files_name": "gas-station-01",
+        "host": "0befeb8e3f295652",
+        "files_operation": "fPutObject",
+        "files_bucket": "gas-station-01",
+        "files_object": "",
+        "files_filepath": "C:\\Users\\ekgat\\OneDrive\\Desktop\\fuel-logistics-cloud\\MinIO\\data",
+        "files_metadata": "",
+        "x": 1260,
+        "y": 100,
+        "wires": [
+            [
+                "1ccfec0c9eb5a163"
+            ],
+            [
+                "e71f0416f77a4b68"
+            ]
+        ]
+    },
+    {
+        "id": "a995c213cd411705",
+        "type": "file",
+        "z": "a93feb3184e48222",
+        "name": "",
+        "filename": "filename",
+        "filenameType": "msg",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "utf8",
+        "x": 700,
+        "y": 220,
+        "wires": [
+            [
+                "d78ff36bdfd673ee",
+                "50ec4a7159a9efb9"
+            ]
+        ]
+    },
+    {
+        "id": "d78ff36bdfd673ee",
+        "type": "debug",
+        "z": "a93feb3184e48222",
+        "name": "file",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 870,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "50ec4a7159a9efb9",
+        "type": "switch",
+        "z": "a93feb3184e48222",
+        "name": "",
+        "property": "customer",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "gas-station-01",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "gas-station-02",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "gas-station-03",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 3,
+        "x": 990,
+        "y": 220,
+        "wires": [
+            [
+                "230a5298ad824eba"
+            ],
+            [
+                "34a7bee4541829d0"
+            ],
+            [
+                "b436d3f5f7492191"
+            ]
+        ]
+    },
+    {
+        "id": "c24f0e963023de55",
+        "type": "debug",
+        "z": "a93feb3184e48222",
+        "name": "msg 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1490,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "3fa5363a64471e47",
+        "type": "debug",
+        "z": "a93feb3184e48222",
+        "name": "msg 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1490,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "34a7bee4541829d0",
+        "type": "files",
+        "z": "a93feb3184e48222",
+        "files_name": "gas-station-02",
+        "host": "0befeb8e3f295652",
+        "files_operation": "fPutObject",
+        "files_bucket": "gas-station-02",
+        "files_object": "",
+        "files_filepath": "C:\\Users\\ekgat\\OneDrive\\Desktop\\fuel-logistics-cloud\\MinIO\\data",
+        "files_metadata": "",
+        "x": 1260,
+        "y": 220,
+        "wires": [
+            [
+                "c24f0e963023de55"
+            ],
+            [
+                "3fa5363a64471e47"
+            ]
+        ]
+    },
+    {
+        "id": "284627eacc88c9a5",
+        "type": "debug",
+        "z": "a93feb3184e48222",
+        "name": "msg 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1490,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "54607a2c0cabbc4f",
+        "type": "debug",
+        "z": "a93feb3184e48222",
+        "name": "msg 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1490,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "b436d3f5f7492191",
+        "type": "files",
+        "z": "a93feb3184e48222",
+        "files_name": "gas-station-03",
+        "host": "0befeb8e3f295652",
+        "files_operation": "fPutObject",
+        "files_bucket": "gas-station-03",
+        "files_object": "",
+        "files_filepath": "C:\\Users\\ekgat\\OneDrive\\Desktop\\fuel-logistics-cloud\\MinIO\\data",
+        "files_metadata": "",
+        "x": 1260,
+        "y": 340,
+        "wires": [
+            [
+                "284627eacc88c9a5"
+            ],
+            [
+                "54607a2c0cabbc4f"
+            ]
+        ]
+    },
+    {
+        "id": "e585297217ee8c14",
+        "type": "link in",
+        "z": "a93feb3184e48222",
+        "name": "Retried Alarms",
+        "links": [
+            "dce04ebdc4e4a269"
+        ],
+        "x": 1025,
+        "y": 300,
+        "wires": [
+            [
+                "50ec4a7159a9efb9"
+            ]
+        ]
+    },
+    {
+        "id": "e1ccb17ba6019313",
+        "type": "catch",
+        "z": "a93feb3184e48222",
+        "name": "",
+        "scope": [
+            "230a5298ad824eba",
+            "34a7bee4541829d0",
+            "b436d3f5f7492191"
+        ],
+        "uncaught": false,
+        "x": 830,
+        "y": 540,
+        "wires": [
+            [
+                "780e44011ddb2593"
+            ]
+        ]
+    },
+    {
+        "id": "780e44011ddb2593",
+        "type": "function",
+        "z": "a93feb3184e48222",
+        "name": "Retry Counter",
+        "func": "// Αν είναι η πρώτη αποτυχία, αρχίζουμε το μέτρημα από το 0\nif (msg.retries === undefined) {\n    msg.retries = 0;\n}\n\n// Αν δεν έχουμε φτάσει ακόμα τις 3 προσπάθειες\nif (msg.retries < 3) {\n    msg.retries += 1;\n    \n    // Επειδή το Catch Node αλλάζει λίγο το msg.payload, \n    // επαναφέρουμε το αρχικό payload που περιέχει το JSON μας\n    if (msg.error && msg.error.message) {\n        node.warn(\"Αποτυχία MinIO (Προσπάθεια \" + msg.retries + \"/3): \" + msg.error.message);\n    }\n    \n    return [msg, null]; // Στέλνουμε το μήνυμα στην έξοδο 1 (προς το Delay)\n} else {\n    node.error(\"🚨 Το MinIO απέτυχε οριστικά μετά από 3 προσπάθειες!\");\n    return [null, msg]; // Στέλνουμε το μήνυμα στην έξοδο 2 (εδώ θα μπει ο Circuit Breaker μετά!)\n}",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1040,
+        "y": 540,
+        "wires": [
+            [
+                "811eb4bf8325a9f4"
+            ],
+            [
+                "ca50b623916be6c8"
+            ]
+        ]
+    },
+    {
+        "id": "811eb4bf8325a9f4",
+        "type": "delay",
+        "z": "a93feb3184e48222",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 1260,
+        "y": 540,
+        "wires": [
+            [
+                "dce04ebdc4e4a269"
+            ]
+        ]
+    },
+    {
+        "id": "dce04ebdc4e4a269",
+        "type": "link out",
+        "z": "a93feb3184e48222",
+        "name": "link out 1",
+        "mode": "link",
+        "links": [
+            "e585297217ee8c14"
+        ],
+        "x": 1405,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "ca50b623916be6c8",
+        "type": "function",
+        "z": "a93feb3184e48222",
+        "name": "Prepare for DLQ",
+        "func": "// Κρατάμε μόνο το αρχικό payload που θέλαμε να αποθηκεύσουμε\nlet cleanMessage = {\n    payload: msg.payload,\n    customer: msg.customer,\n    filename: msg.filename,\n    objectName: msg.objectName,\n    metadata: msg.metadata\n};\n\nreturn cleanMessage;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1280,
+        "y": 660,
+        "wires": [
+            [
+                "ddf4b53590f46981"
+            ]
+        ]
+    },
+    {
+        "id": "ddf4b53590f46981",
+        "type": "amqp-out",
+        "z": "a93feb3184e48222",
+        "name": "",
+        "broker": "caf99fe610a2637a",
+        "exchangeName": "dlq.exchange",
+        "exchangeType": "topic",
+        "exchangeRoutingKey": "alarm.failed",
+        "exchangeRoutingKeyType": "str",
+        "exchangeDurable": true,
+        "amqpProperties": "{ \"headers\": {} }",
+        "rpcTimeoutMilliseconds": 3000,
+        "outputs": 0,
+        "x": 1550,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "f231d3c479d9df45",
+        "type": "inject",
+        "z": "e36f7e391bd052ca",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 240,
+        "wires": [
+            [
+                "1f594fa2c1182666",
+                "487203294c7ab155",
+                "b64dc93a45eb1152"
+            ]
+        ]
+    },
+    {
+        "id": "048e1ef7d1557425",
+        "type": "debug",
+        "z": "e36f7e391bd052ca",
+        "name": "bucket 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 640,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "0a7b04dacfdc93a4",
+        "type": "debug",
+        "z": "e36f7e391bd052ca",
+        "name": "bucket 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 640,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "1f594fa2c1182666",
+        "type": "buckets",
+        "z": "e36f7e391bd052ca",
+        "buckets_name": "",
+        "host": "85c13dae19a089de",
+        "buckets_operation": "makeBucket",
+        "buckets_bucket": "gas-station-01",
+        "buckets_region": "",
+        "buckets_prefix": "",
+        "buckets_recursive": false,
+        "buckets_start_after": "",
+        "x": 410,
+        "y": 100,
+        "wires": [
+            [
+                "048e1ef7d1557425"
+            ],
+            [
+                "0a7b04dacfdc93a4"
+            ]
+        ]
+    },
+    {
+        "id": "5a70f48ad171ce95",
+        "type": "debug",
+        "z": "e36f7e391bd052ca",
+        "name": "bucket 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 640,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "51af77be25dcdb2f",
+        "type": "debug",
+        "z": "e36f7e391bd052ca",
+        "name": "bucket 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 640,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "487203294c7ab155",
+        "type": "buckets",
+        "z": "e36f7e391bd052ca",
+        "buckets_name": "",
+        "host": "85c13dae19a089de",
+        "buckets_operation": "makeBucket",
+        "buckets_bucket": "gas-station-02",
+        "buckets_region": "",
+        "buckets_prefix": "",
+        "buckets_recursive": false,
+        "buckets_start_after": "",
+        "x": 410,
+        "y": 240,
+        "wires": [
+            [
+                "5a70f48ad171ce95"
+            ],
+            [
+                "51af77be25dcdb2f"
+            ]
+        ]
+    },
+    {
+        "id": "1ab5b82588f0c1b0",
+        "type": "debug",
+        "z": "e36f7e391bd052ca",
+        "name": "bucket 5",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 640,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "a1d052dcf1eec4b0",
+        "type": "debug",
+        "z": "e36f7e391bd052ca",
+        "name": "bucket 6",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 640,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "b64dc93a45eb1152",
+        "type": "buckets",
+        "z": "e36f7e391bd052ca",
+        "buckets_name": "",
+        "host": "85c13dae19a089de",
+        "buckets_operation": "makeBucket",
+        "buckets_bucket": "gas-station-03",
+        "buckets_region": "",
+        "buckets_prefix": "",
+        "buckets_recursive": false,
+        "buckets_start_after": "",
+        "x": 410,
+        "y": 380,
+        "wires": [
+            [
+                "1ab5b82588f0c1b0"
+            ],
+            [
+                "a1d052dcf1eec4b0"
+            ]
+        ]
+    }
+]
