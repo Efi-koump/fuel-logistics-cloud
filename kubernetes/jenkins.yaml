@@ -1,0 +1,45 @@
+apiVersion: jenkins.io/v1alpha2
+kind: Jenkins
+metadata:
+  name: jenkins
+  namespace: jenkins
+spec:
+  configurationAsCode:
+    configurations: []
+    secretRef:
+      name: ""
+  master:
+    basePlugins:
+    - name: kubernetes
+      version: "4261.v0d9b_b_07270d6"
+    - name: workflow-job
+      version: "1400.v745b_a_d75f63e"
+    - name: workflow-aggregator
+      version: "596.v8c21c963d92d"
+    - name: git
+      version: "5.2.1"
+    containers:
+    - name: jenkins-master
+      image: jenkins/jenkins:lts
+      imagePullPolicy: Always
+      resources:
+        limits:
+          cpu: "1"
+          memory: 1Gi
+        requests:
+          cpu: "500m"
+          memory: 500Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jenkins-web
+  namespace: jenkins
+spec:
+  selector:
+    jenkins.io/jenkins: jenkins
+  ports:
+  - name: http
+    port: 8085         
+    targetPort: 8080
+  type: LoadBalancer
