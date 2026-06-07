@@ -52,7 +52,7 @@ spec:
       serviceAccountName: jenkins-operator
       containers:
       - name: jenkins-operator
-        image: jenkins/kubernetes-operator:latest
+        image: quay.io/jenkins-operator/kubernetes-operator:v0.8.0
         imagePullPolicy: Always
         env:
         - name: WATCH_NAMESPACE
