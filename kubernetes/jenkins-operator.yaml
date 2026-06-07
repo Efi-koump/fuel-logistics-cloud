@@ -29,7 +29,6 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
   name: jenkins-operator
-Source: ""
 subjects:
 - kind: ServiceAccount
   name: jenkins-operator
@@ -65,4 +64,4 @@ spec:
             fieldRef:
               fieldPath: metadata.name
         - name: OPERATOR_NAME
-          value = "jenkins-operator"
+          value: "jenkins-operator"
