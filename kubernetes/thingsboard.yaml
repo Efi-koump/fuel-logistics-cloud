@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thingsboard
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: thingsboard
+  template:
+    metadata:
+      labels:
+        app: thingsboard
+    spec:
+      containers:
+      - name: thingsboard
+        image: thingsboard/tb-postgres:3.6.3    
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9090
+          name: web
+        - containerPort: 1883
+          name: mqtt
+        env:
+        - name: TB_QUEUE_TYPE
+          value: "in-memory"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: thingsboard
+  namespace: default
+spec:
+  selector:
+    app: thingsboard
+  ports:
+  - name: web-port
+    port: 9090         
+    targetPort: 9090
+  - name: mqtt-port
+    port: 1883         
+    targetPort: 1883
+  type: LoadBalancer   
