@@ -17,7 +17,7 @@ spec:
       containers:
       - name: node-red
         image: fuel-logistics-node-red:latest
-        imagePullPolicy: Never # Λέει στο MicroK8s να χρησιμοποιήσει το τοπικό image που χτίσαμε
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 1880
           name: ui
@@ -36,4 +36,4 @@ spec:
   - name: ui
     port: 1880
     targetPort: 1880
-  type: ClusterIP
+  type: LoadBalancer
