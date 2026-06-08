@@ -24,6 +24,10 @@ spec:
         env:
         - name: TZ
           value: "Europe/Athens"
+        - name: FLOWS                         
+          value: "flows.json"                 
+        - name: NODE_RED_SERVER_HOST          
+          value: "0.0.0.0"                    
 ---
 apiVersion: v1
 kind: Service
