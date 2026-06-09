@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: thingsboard
-        image: thingsboard/tb-postgres:3.6.3    
+        image: thingsboard/tb-postgres:3.6.3
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9090
@@ -25,6 +25,14 @@ spec:
         env:
         - name: TB_QUEUE_TYPE
           value: "in-memory"
+        volumeMounts:
+        - mountPath: /var/lib/thingsboard
+          name: tb-data
+      volumes:
+      - name: tb-data
+        hostPath:
+          path: /run/desktop/mnt/host/c/Users/ekgat/OneDrive/Desktop/fuel-logistics-cloud/thingsboard/mytb-data
+          type: Directory
 ---
 apiVersion: v1
 kind: Service
@@ -36,9 +44,9 @@ spec:
     app: thingsboard
   ports:
   - name: web-port
-    port: 9090         
+    port: 9090
     targetPort: 9090
   - name: mqtt-port
-    port: 1883         
+    port: 1883
     targetPort: 1883
-  type: LoadBalancer   
+  type: LoadBalancer
