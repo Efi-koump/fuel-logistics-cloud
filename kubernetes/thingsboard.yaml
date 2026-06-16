@@ -31,7 +31,7 @@ spec:
       volumes:
       - name: tb-data
         hostPath:
-          path: /run/desktop/mnt/host/c/tb/mytb-data
+          path: /run/desktop/mnt/host/c/Users/ekgat/mytb-data
           type: Directory
 ---
 apiVersion: v1
