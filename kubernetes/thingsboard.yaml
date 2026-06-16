@@ -31,7 +31,7 @@ spec:
       volumes:
       - name: tb-data
         hostPath:
-          path: /run/desktop/mnt/host/c/Users/ekgat/mytb-data
+          path: /home/efi/fuel-logistics-cloud/thingsboard/mytb-data
           type: Directory
 ---
 apiVersion: v1
