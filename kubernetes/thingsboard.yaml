@@ -25,14 +25,14 @@ spec:
         env:
         - name: TB_QUEUE_TYPE
           value: "in-memory"
-        volumeMounts:
-        - mountPath: /var/lib/thingsboard
-          name: tb-data
-      volumes:
-      - name: tb-data
-        hostPath:
-          path: /home/efi/fuel-logistics-cloud/thingsboard/mytb-data
-          type: Directory
+        # volumeMounts:
+        # - mountPath: /var/lib/thingsboard
+        #   name: tb-data
+      # volumes:
+      # - name: tb-data
+      #   hostPath:
+          # path: /var/tmp/mytb-data
+          # type: Directory
 ---
 apiVersion: v1
 kind: Service
