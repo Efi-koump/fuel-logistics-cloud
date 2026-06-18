@@ -1,0 +1,35 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: alarm-processor-serverless
+  namespace: default
+spec:
+  template:
+    spec:
+      containers:
+      - name: processor
+        image: python:3.9-slim
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          # 1. Εγκατάσταση του Flask μέσα στο Serverless Pod
+          pip install flask
+          
+          # 2. Δημιουργία του αρχείου κώδικα inline για να τρέξει άμεσα
+          cat << 'EOF' > app.py
+          from flask import Flask, request, jsonify
+          app = Flask(__name__)
+
+          @app.route('/', methods=['POST'])
+          def process_event():
+              print("🚀 Serverless Function Triggered successfully by MinIO!")
+              return jsonify({"status": "success"}), 200
+
+          if __name__ == '__main__':
+              app.run(host='0.0.0.0', port=8080)
+          EOF
+          
+          # 3. Εκκίνηση της Serverless εφαρμογής
+          python app.py
+        ports:
+        - containerPort: 8080
