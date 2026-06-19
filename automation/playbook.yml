@@ -1,0 +1,10 @@
+# playbook.yml - Ρύθμιση Ansible
+- name: Εγκατάσταση του MicroK8s στον Server
+  hosts: microk8s_server
+  become: true # "τρέξε ως διαχειριστής" (sudo)
+  tasks:
+    - name: Κατέβασε και εγκατέστησε το MicroK8s
+      community.general.snap:
+        name: microk8s
+        classic: true
+        channel: 1.28/stable 
