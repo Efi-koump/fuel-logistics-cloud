@@ -21,6 +21,7 @@
 - Kubernetes & MicroK8s (Orchestration)
 - Jenkins & ArgoCD (GitOps CI/CD)
 - OpenTofu & Ansible (Declarative Automation Files)
+- Flask & Bootstrap 5 (Lightweight Web UI Monitor)
 
 ## Σημείωση Υλοποίησης (Fallback Strategies)
 Λόγω τεχνικών περιορισμών και hardware constraints στο περιβάλλον ανάπτυξης, η ζωντανή εκτέλεση του Knative runtime καθώς και των OpenTofu/Ansible playbooks δεν κατέστη δυνατή. Ως εναλλακτική λύση, τα αρχεία υποδομής (`main.tf`, `playbook.yml`) και ο Serverless κώδικας Python έχουν ενταχθεί declarative στο Monorepo (Deployment-Ready), ενώ η event-driven επεξεργασία των metadata προσομοιώνεται μέσω asynchronous ροών στο Node-RED.
@@ -44,6 +45,7 @@ kubectl apply -f kubernetes/
 - Node-RED: http://<Cluster-Node-IP>:31880
 - RabbitMQ Management: http://<Cluster-Node-IP>:31572
 - MinIO Console: http://<Cluster-Node-IP>:30901
+- Frontend Web UI Monitor: http://<Cluster-Node-IP>:30500
 
 *Σημείωση:* Ο κωδικός πρόσβασης για το Stateless Jenkins Pod ανακτάται μέσω των logs με την εντολή: `kubectl logs deployment/jenkins -n jenkins`.
 
