@@ -1,1 +1,1 @@
-https://github.com/Efi-koump/fuel-logistics-and-monitoring.git
+https://github.com/Efi-koump/fuel-logistics-cloud
