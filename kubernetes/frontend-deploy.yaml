@@ -1,0 +1,148 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-source
+  namespace: default
+data:
+  app.py: |
+    # frontend/app.py
+    from flask import Flask, render_template_string
+    from minio import Minio
+    import json
+    import os
+
+    app = Flask(__name__)
+
+    MINIO_ENDPOINT = os.getenv("MINIO_ENDPOINT", "minio-service:9000")
+    MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY", "minioadmin")
+    MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY", "minioadmin")
+
+    minio_client = Minio(
+        MINIO_ENDPOINT,
+        access_key=MINIO_ACCESS_KEY,
+        secret_key=MINIO_SECRET_KEY,
+        secure=False
+    )
+
+    HTML_TEMPLATE = """
+    <!DOCTYPE html>
+    <html lang="el">
+    <head>
+        <meta charset="UTF-8">
+        <title>Fuel Logistics - Safety Monitor UI</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    </head>
+    <body class="bg-secondary text-white">
+        <div class="container mt-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h2 text-dark">⛽ Fuel Logistics & Safety Monitor</h1>
+                <span class="badge bg-primary fs-6">Kubernetes Live Mode</span>
+            </div>
+            
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-dark text-white">🟢 Καταγραφή Ιστορικών Συναγερμών (MinIO Alarms JSON)</div>
+                <div class="card-body">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Πελάτης (Bucket)</th>
+                                <th>Αρχείο Συμβάντος</th>
+                                <th>Τύπος Συναγερμού</th>
+                                <th>Συσκευή</th>
+                                <th>Κατάσταση</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for alarm in alarms %}
+                            <tr>
+                                <td><span class="badge bg-secondary">{{ alarm.bucket }}</span></td>
+                                <td><code>{{ alarm.object_name }}</code></td>
+                                <td><span class="text-danger fw-bold">{{ alarm.data.alarm_type }}</span></td>
+                                <td>{{ alarm.data.device }}</td>
+                                <td><span class="badge bg-success">Archived</span></td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">Δεν βρέθηκαν καταγεγραμμένα alarms στα buckets.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+
+    @app.route('/')
+    def index():
+        all_alarms = []
+        try:
+            buckets = ["customer01-bucket", "customer02-bucket", "customer03-bucket"]
+            for bucket in buckets:
+                if minio_client.bucket_exists(bucket):
+                    objects = minio_client.list_objects(bucket, recursive=True)
+                    for obj in objects:
+                        response = minio_client.get_object(bucket, obj.object_name)
+                        data = json.loads(response.data.decode('utf-8'))
+                        all_alarms.append({
+                            "bucket": bucket,
+                            "object_name": obj.object_name,
+                            "data": data
+                        })
+        except Exception as e:
+            print(f"Σφάλμα κατά την ανάκτηση από το MinIO: {e}")
+            
+        return render_template_string(HTML_TEMPLATE, alarms=all_alarms)
+
+    if __name__ == '__main__':
+        app.run(host='0.0.0.0', port=5000)
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-app
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend-app
+  template:
+    metadata:
+      labels:
+        app: frontend-app
+    spec:
+      containers:
+      - name: frontend
+        image: python:3.10-slim
+        command: ["/bin/sh", "-c"]
+        args:
+        - "pip install flask minio && python /app/app.py"
+        ports:
+        - containerPort: 5000
+        env:
+        - name: MINIO_ENDPOINT
+          value: "minio-service:9000"
+        volumeMounts:
+        - name: app-volume
+          mountPath: /app
+      volumes:
+      - name: app-volume
+        configMap:
+          name: frontend-source
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: default
+spec:
+  type: NodePort
+  ports:
+  - port: 5000
+    targetPort: 5000
+    nodePort: 30500
+  selector:
+    app: frontend-app
