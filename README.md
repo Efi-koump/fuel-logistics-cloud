@@ -1,56 +1,58 @@
-# Fuel Logistics Cloud Platform
+# Fuel Logistics Cloud Native Platform
 
 ## Περιγραφή 
 
-Πλατφόρμα παρακολούθησης και διαχείρισης στόλου οχημάτων διανομής
-καυσίμων, δεξαμενών και αποθηκών καυσίμων, ελαιολιπαντικών και ξυλείας.
+Αρχιτεκτονικός μετασχηματισμός της πλατφόρμας παρακολούθησης και διαχείρισης στόλου οχημάτων διανομής καυσίμων, δεξαμενών και αποθηκών από περιβάλλον Docker Compose σε κατανεμημένη υποδομή Kubernetes.
 
-Οι συσκευές (π.χ. βυτιοφόρα) καταχορούνται στο ThingsBoard και παράγουν
-τηλεμετρία και συναγερμούς (alarms). Οι συναγερμοί προωθούνται μέσω RabbitMQ, επεξεργάζονται στο Node-Red και αποθηκεύονται σε Minio Object Storage για ιστορική ανάλυση και αρχειοθέτηση.
+Οι 15 συσκευές (κατανεμημένες σε 3 Gas Stations) παράγουν τηλεμετρία και συναγερμούς (alarms). Οι συναγερμοί προωθούνται μέσω RabbitMQ, επεξεργάζονται στο Node-RED και αποθηκεύονται σε MinIO Object Storage, με multi-tenancy απομόνωση σε buckets ανά πελάτη.
 
 ## Αρχιτεκτονική Συστήματος
 
-Το σύστημα βασίζεται σε αρχιτεκτονική microservices και υλοποιείται εξ' ολοκλήρουσε Docker containers.
+Το σύστημα βασίζεται σε αρχιτεκτονική microservices και υλοποιείται σε περιβάλλον Kubernetes (MicroK8s) με Stateless Deployments. 
 
-Το ThingsBoard λειτουργεί ως κεντρική πλατφόρμα ΙοΤ, ενώ το RabbitMQ χρησιμοποιείται για την ασύγχρονη μεταφορά συναγερμών. Το Node-Red αναλαμβάνει την επεξεργασία των μηνυμάτων και το MinIO χρησιμοποιείται ως Object Storage γαι ιστορική ανάλυση και αρχειοθέτηση.
-
-Η επικοινωνία μεταξύ των επιμέρους υπηρεσιών πραγματοποιείται μέσω Docker internal
+Η διαχείριση του κύκλου ζωής γίνεται με GitOps Pipeline, χρησιμοποιώντας το Jenkins για το Continuous Integration (CI) και το ArgoCD για το Continuous Deployment (CD) με βάση τα manifests του αποθετηρίου[cite: 18].
 
 ## Τεχνολογίες 
 
 - ThingsBoard (IoT Platform)
 - RabbitMQ (Message Broker)
-- Node-Red (Flow-based Processing)
+- Node-RED (Flow-based Processing)
 - MinIO (Object Storage)
-- Docker & Docker Compose
+- Kubernetes & MicroK8s (Orchestration)
+- Jenkins & ArgoCD (GitOps CI/CD)
+- OpenTofu & Ansible (Declarative Automation Files)
+
+## Σημείωση Υλοποίησης (Fallback Strategies)
+Λόγω τεχνικών περιορισμών και hardware constraints στο περιβάλλον ανάπτυξης, η ζωντανή εκτέλεση του Knative runtime καθώς και των OpenTofu/Ansible playbooks δεν κατέστη δυνατή. Ως εναλλακτική λύση, τα αρχεία υποδομής (`main.tf`, `playbook.yml`) και ο Serverless κώδικας Python έχουν ενταχθεί declarative στο Monorepo (Deployment-Ready), ενώ η event-driven επεξεργασία των metadata προσομοιώνεται μέσω asynchronous ροών στο Node-RED.
 
 ## Εκκίνηση Συστήματος
 
-Απαιτείται εγκατεστημένο Docker και Docker Compose.
+Απαιτείται εγκατεστημένο περιβάλλον Kubernetes (MicroK8s) και ενεργοποιημένα τα απαραίτητα addons.
 
-### Windows / Linux / macOS
+### Εφαρμογή Manifests
 
 ```bash
-docker compose up -d
-
-```md
-Η εργασία έχει δοκιμαστεί σε Windows 11 με Docker Desktop.
+kubectl apply -f kubernetes/
+```
+Η εφαρμογή και ο συγχρονισμός των microservices μπορεί επίσης να γίνει αυτόματα μέσω του ArgoCD UI, συνδέοντας το παρόν Git αποθετήριο.
 
 ## Πρόσβαση σε Υπηρεσίες
 
-- ThingsBoard: http://localhost:8080
-- Node-Red: http://localhost:1880
-- RabbitMQ Management: http://localhost:15672
-- MinIO: http://localhost:9001
+Οι υπηρεσίες εκτίθενται μέσω NodePort Services του Kubernetes Cluster στις ακόλουθες διευθύνσεις:
 
-## Δοκιμή Σεναρίου
+- ThingsBoard: http://<Cluster-Node-IP>:30080
+- Node-RED: http://<Cluster-Node-IP>:31880
+- RabbitMQ Management: http://<Cluster-Node-IP>:31572
+- MinIO Console: http://<Cluster-Node-IP>:30901
 
-1. Δημιουργία συσκευών στο ThingsBoard
-2. Παραγωγή συναγερμού (π.χ. LOW FUEL)
-3. Ο συναγερμός αποστέλλεται στο RabbitMQ
-4. Το Node-Red επεξεργάζεται το μήνυμα
-5. Το αρχείο αποθηκεύεται στο ΜinIO στο αντίστοιχο bucket του πελάτη
-   που ανήκει η συσκευή
+*Σημείωση:* Ο κωδικός πρόσβασης για το Stateless Jenkins Pod ανακτάται μέσω των logs με την εντολή: `kubectl logs deployment/jenkins -n jenkins`.
+
+## Δοκιμή Σεναρίου & SLAs
+
+Η σωστή λειτουργία και η ποιότητα υπηρεσίας επαληθεύτηκαν μέσω load test (`load_test.py`), ορίζοντας τα εξής επίπεδα SLA βάσει των CDF Percentiles:
+1. **Gold Class (≤ 13 ms):** Κρίσιμα Alarms βυτιοφόρων και δεξαμενών.
+2. **Silver Class (14 ms - 20 ms):** Τυπική τηλεμετρία και επιτήρηση αποθηκών.
+3. **Bronze Class (> 20 ms):** Batch διεργασίες και metadata annotation.
 
 ## Λογαριασμοί Δοκιμής
 
@@ -65,3 +67,11 @@ docker compose up -d
 ### MinIO
 - Username: minioadmin
 - Password: minioadmin
+
+### ArgoCD
+- Username: admin
+- Password: *Ανάκτηση μέσω του Kubernetes secret (argocd-initial-admin-secret)*
+
+### Jenkins
+- Username: admin
+- Password: *Ανάκτηση μέσω των Kubernetes logs (initialAdminPassword)*
