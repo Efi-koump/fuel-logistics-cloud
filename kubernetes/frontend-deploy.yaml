@@ -36,26 +36,27 @@ data:
             .toast-container { position: fixed; top: 20px; right: 20px; z-index: 1055; }
         </style>
     </head>
-    <body class="bg-light">
+    <body class="bg-dark text-light">
         <div class="toast-container" id="toastContainer"></div>
 
         <div class="container mt-5">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h1 class="h2 text-warning">⛽ Fuel Logistics & Safety Monitor Dashboard</h1>
-                <span class="badge bg-danger fs-6 animate-pulse">Kubernetes Live Mode</span>
+                <span class="badge bg-danger fs-6">Kubernetes Testing Mode</span>
             </div>
             
             <div class="card bg-secondary text-light shadow">
+                <div class="card-header bg-dark text-warning fw-bold fs-5">🟢 Καταγραφή Ιστορικών Συναγερμών (MinIO Alarms JSON)</div>
                 <div class="card-body">
-                    <h5 class="card-title text-info">Ενεργοί Συναγερμοί (Alarms) ανά Tenant</h5>
                     <div class="table-responsive">
                         <table class="table table-dark table-striped table-hover mt-3 align-middle">
                             <thead>
                                 <tr>
-                                    <th>Σταθμός (Bucket)</th>
-                                    <th>Όνομα Αρχείου</th>
-                                    <th>Συσκευή (Device ID)</th>
+                                    <th>Πελάτης (Bucket)</th>
+                                    <th>Αρχείο Συμβάντος</th>
                                     <th>Τύπος Συναγερμού</th>
+                                    <th>Συσκευή</th>
+                                    <th>Κατάσταση</th>
                                     <th>Ενέργεια</th>
                                 </tr>
                             </thead>
@@ -63,18 +64,19 @@ data:
                                 {% for alarm in alarms %}
                                 <tr>
                                     <td><span class="badge bg-primary">{{ alarm.bucket }}</span></td>
-                                    <td class="text-muted" style="font-size: 0.85rem;">{{ alarm.object_name }}</td>
-                                    <td class="fw-bold text-light">{{ alarm.device }}</td>
-                                    <td><span class="text-warning fw-bold">{{ alarm.type }}</span></td>
+                                    <td><code class="text-info font-monospace" style="font-size: 0.85rem;">{{ alarm.object_name }}</code></td>
+                                    <td><span class="text-danger fw-bold">{{ alarm.type }}</span></td>
+                                    <td class="text-white fw-semibold">{{ alarm.device }}</td>
+                                    <td><span class="badge bg-success">Archived</span></td>
                                     <td>
-                                        <a href="/download/{{ alarm.bucket }}/{{ alarm.object_name }}" class="btn btn-sm btn-outline-info">
+                                        <a href="/download/{{ alarm.bucket }}/{{ alarm.object_name }}" class="btn btn-sm btn-outline-warning">
                                             📥 Download JSON
                                         </a>
                                     </td>
                                 </tr>
                                 {% else %}
                                 <tr>
-                                    <td colspan="5" class="text-center text-muted">Δεν βρέθηκαν ενεργοί συναγερμοί στα Buckets.</td>
+                                    <td colspan="6" class="text-center text-muted">Δεν βρέθηκαν καταγεγραμμένα alarms.</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -92,7 +94,7 @@ data:
                     .then(response => response.json())
                     .then(data => {
                         if (data.count > currentAlarmCount) {
-                            showNotification("🚨 Νέος Κρίσιμος Συναγερμός!", "Λήφθηκε νέο alarm στα multi-tenancy buckets. Κάντε ανανέωση για προβολή.");
+                            showNotification("🚨 Νέος Κρίσιμος Συναγερμός!", "Λήφθηκε νέο alarm στα buckets. Κάντε ανανέωση.");
                             currentAlarmCount = data.count;
                         }
                     });
@@ -112,7 +114,6 @@ data:
                 container.appendChild(toast);
             }
 
-            // Έλεγχος για νέα alarms κάθε 5 δευτερόλεπτα
             setInterval(checkNewAlarms, 5000);
         </script>
     </body>
@@ -123,29 +124,39 @@ data:
         all_alarms = []
         buckets = ["gas-station-01", "gas-station-02", "gas-station-03"]
         for bucket in buckets:
-            if minio_client.bucket_exists(bucket):
-                objects = minio_client.list_objects(bucket)
-                for obj in objects:
-                    try:
-                        response = minio_client.get_object(bucket, obj.object_name)
-                        data = json.loads(response.data.decode('utf-8'))
-                        device_id = data.get("device_id", "Unknown")
-                        alarm_type = data.get("alarm_type", "General Alarm")
-                        all_alarms.append({
-                            "bucket": bucket,
-                            "object_name": obj.object_name,
-                            "device": device_id,
-                            "type": alarm_type
-                        })
-                    except:
-                        pass
+            try:
+                if minio_client.bucket_exists(bucket):
+                    objects = minio_client.list_objects(bucket, recursive=True)
+                    for obj in objects:
+                        try:
+                            response = minio_client.get_object(bucket, obj.object_name)
+                            file_data = response.data.decode('utf-8')
+                            
+                            if not file_data.strip():
+                                continue
+                                
+                            data = json.loads(file_data)
+                            
+                            # ΑΝΤΙΣΤΟΙΧΙΣΗ ΜΕ ΤΟ ΔΙΚΟ ΣΟΥ JSON ΠΛΕΟΝ:
+                            alarm_type = data.get("type", "General Alarm")
+                            device_name = data.get("originatorName", "Unknown Device")
+                            
+                            all_alarms.append({
+                                "bucket": bucket,
+                                "object_name": obj.object_name,
+                                "type": alarm_type,
+                                "device": device_name
+                            })
+                        except:
+                            pass
+            except:
+                pass
         return all_alarms
 
     @app.route('/')
     def index():
         return render_template_string(HTML_TEMPLATE, alarms=get_all_alarms_list())
 
-    # Endpoint για λήψη (Download) ολόκληρου του αρχείου JSON από το MinIO
     @app.route('/download/<bucket>/<object_name>')
     def download_file(bucket, object_name):
         try:
@@ -160,7 +171,6 @@ data:
         except Exception as e:
             return f"Σφάλμα κατά το download: {e}", 500
 
-    # API Endpoint για να ελέγχει η JavaScript live τον αριθμό των αρχείων
     @app.route('/api/alarm-count')
     def alarm_count():
         return jsonify({"count": len(get_all_alarms_list())})
