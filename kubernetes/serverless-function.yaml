@@ -1,17 +1,14 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: serving.knative.dev/v1
+kind: Service
 metadata:
   name: alarm-processor-serverless
   namespace: default
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: alarm-processor
   template:
     metadata:
-      labels:
-        app: alarm-processor
+      annotations:
+        autoscaling.knative.dev/min-scale: "0"
+        autoscaling.knative.dev/scale-to-zero-pod-retains-time: "30s"
     spec:
       containers:
       - name: processor
@@ -19,39 +16,36 @@ spec:
         command: ["/bin/sh", "-c"]
         args:
         - |
-          pip install flask
-          
+          pip install flask requests
+
           cat << 'EOF' > app.py
+          import os
           from flask import Flask, request, jsonify
+
           app = Flask(__name__)
 
           @app.route('/', methods=['POST'])
           def process_event():
-              print("🚀 Serverless Function Triggered successfully by MinIO!")
-              return jsonify({"status": "success", "message": "Alarm processed"}), 200
+              print("🚀 Serverless Knative Function Triggered by MinIO Event!")
+              data = request.get_json(silent=True) or {}
+              
+              # Επεξεργασία και προσθήκη metadata
+              response_data = {
+                  "status": "success",
+                  "message": "Alarm processed successfully",
+                  "annotated_by": "knative-serverless-engine",
+                  "received_event": data
+              }
+              return jsonify(response_data), 200
 
           if __name__ == '__main__':
               app.run(host='0.0.0.0', port=8080)
           EOF
-          
+
           python app.py
         ports:
         - containerPort: 8080
         resources:
           limits:
-            cpu: "200m"      # Πολύ χαμηλή κατανάλωση, όπως οι serverless συναρτήσεις!
+            cpu: "200m"
             memory: "128Mi"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: alarm-processor-service
-  namespace: default
-spec:
-  selector:
-    app: alarm-processor
-  ports:
-  - protocol: TCP
-    port: 8080
-    targetPort: 8080
-  type: ClusterIP
