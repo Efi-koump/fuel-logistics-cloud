@@ -32,6 +32,13 @@ spec:
           value: "minioadmin"
         - name: MINIO_ROOT_PASSWORD
           value: "minioadmin"
+        volumeMounts:
+        - mountPath: /data
+          name: minio-storage
+      volumes:
+      - name: minio-storage
+        persistentVolumeClaim:
+          claimName: minio-data-pvc
 ---
 apiVersion: v1
 kind: Service
