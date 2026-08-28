@@ -25,6 +25,8 @@ spec:
         env:
         - name: TB_QUEUE_TYPE
           value: "in-memory"
+        - name: TB_INSTALL_DATABASE
+          value: "true"
         volumeMounts:
         - mountPath: /usr/share/thingsboard/data
           name: thingsboard-storage
