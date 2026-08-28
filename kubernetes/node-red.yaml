@@ -23,6 +23,13 @@ spec:
         env:
         - name: TZ
           value: "Europe/Athens"
+        volumeMounts:
+        - mountPath: /data
+          name: nodered-storage
+      volumes:
+      - name: nodered-storage
+        persistentVolumeClaim:
+          claimName: nodered-data-pvc
 ---
 apiVersion: v1
 kind: Service
@@ -36,4 +43,4 @@ spec:
   - name: ui
     port: 1888
     targetPort: 1880
-  type: LoadBalancer            
+  type: LoadBalancer
