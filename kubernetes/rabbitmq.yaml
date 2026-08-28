@@ -27,6 +27,13 @@ spec:
           value: "ais25108"
         - name: RABBITMQ_DEFAULT_PASS
           value: "ais25108"
+        volumeMounts:
+        - mountPath: /var/lib/rabbitmq
+          name: rabbitmq-storage
+      volumes:
+      - name: rabbitmq-storage
+        persistentVolumeClaim:
+          claimName: rabbitmq-data-pvc
 ---
 apiVersion: v1
 kind: Service
