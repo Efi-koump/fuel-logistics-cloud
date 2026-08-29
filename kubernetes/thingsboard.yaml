@@ -28,6 +28,9 @@ spec:
         volumeMounts:
         - mountPath: /usr/share/thingsboard/data
           name: thingsboard-storage
+        - mountPath: /var/lib/postgresql/data
+          name: thingsboard-storage
+          subPath: postgres-data
       volumes:
       - name: thingsboard-storage
         persistentVolumeClaim:
