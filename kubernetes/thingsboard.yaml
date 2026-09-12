@@ -45,11 +45,13 @@ metadata:
 spec:
   selector:
     app: thingsboard
+  type: NodePort
   ports:
   - name: web-port
     port: 9090
     targetPort: 9090
+    nodePort: 30909
   - name: mqtt-port
     port: 1883
     targetPort: 1883
-  type: LoadBalancer
+    nodePort: 31883

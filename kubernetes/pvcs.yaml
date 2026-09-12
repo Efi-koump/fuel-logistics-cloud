@@ -1,26 +1,26 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: nodered-data-pvc
-spec:
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: microk8s-hostpath
-  resources:
-    requests:
-      storage: 2Gi
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
   name: thingsboard-data-pvc
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: microk8s-hostpath
   resources:
     requests:
-      storage: 5Gi
+      storage: 2Gi
+  storageClassName: "microk8s-hostpath"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nodered-data-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: "microk8s-hostpath"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -29,10 +29,10 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: microk8s-hostpath
   resources:
     requests:
-      storage: 2Gi
+      storage: 1Gi
+  storageClassName: "microk8s-hostpath"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -41,7 +41,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: microk8s-hostpath
   resources:
     requests:
-      storage: 5Gi
+      storage: 2Gi
+  storageClassName: "microk8s-hostpath"
